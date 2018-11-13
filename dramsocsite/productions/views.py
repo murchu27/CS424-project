@@ -1,21 +1,40 @@
 from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 from productions.models import Production
-from django.http import HttpResponse
+from productions.forms import ProductionForm
 
-# Create your views here.
 def production_detail(request,production_id): #detail view
     production = Production.objects.get(id=production_id)
-    response = render(request,'productions/production_detail.html',{
+    return render(request,'productions/production_detail.html',{
         'production':production
     })
 
-    #return HttpResponse('%s</br>%s'%(production.name, production.description))
-    return response
 
 def production_list(request): #list view
     productions = Production.objects.all()
-    output = 'Productions</br>'
-    for p in productions:
-        output+='%s. %s</br>'%(p.id,p.name)
+    return render(request,'productions/production_list.html', {
+        'productions':productions
+    })
 
-    return HttpResponse(output)
+
+@login_required
+def production_update(request,production_id):
+    production = Production.objects.get(id=production_id)
+    if request.user != production.owner:#prevent users that don't own this production instance from updating it
+        return render(request,'productions/production_update_denied.html', {
+            'production':production                
+        })
+    if request.method == "POST":
+        form = ProductionForm(request.POST, instance=production)
+        if form.is_valid():
+            form.save() #update current production object in db
+            return HttpResponseRedirect(reverse('production_detail',kwargs={'production_id':production_id})) 
+        else:
+            return HttpResponseRedirect('/')
+    form = ProductionForm()
+    return render(request,'productions/production_update.html', {
+        'form':form
+    })
+

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div id='deny_alert'>
+	<h2>Access denied</h2>
+	You do not have permission to update this production's details. </br>
+	Contact {{production.owner}} to ask them to update this production
+</div>
+{% endblock %}
+

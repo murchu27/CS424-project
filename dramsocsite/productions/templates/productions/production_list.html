@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3>Production List</h3>
+<!--<div id="production list">
+	<div id="production name">
+		<strong>Production Name:</strong> {{production.name}}
+	</div>
+	<div id="production details">
+		<strong>Production Details:</strong> {{production.description}} 
+	</div>
+</div>-->
+{% for p in productions %}
+<p> <a href="{% url 'production_detail' production_id=p.id %}"> {{ p.name}} </a> </br>
+{% endfor %}
+
+{% endblock %}
