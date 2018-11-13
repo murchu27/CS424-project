@@ -33,7 +33,7 @@ def production_update(request,production_id):
             return HttpResponseRedirect(reverse('production_detail',kwargs={'production_id':production_id})) 
         else:
             return HttpResponseRedirect('/')
-    form = ProductionForm()
+    form = ProductionForm(instance=production)
     return render(request,'productions/production_update.html', {
         'form':form
     })
