@@ -4,6 +4,8 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from productions.models import Production
 from productions.forms import ProductionForm
+from productions.serializers import ProductionSerializer
+from rest_framework import viewsets
 
 def production_detail(request,production_id): #detail view
     production = Production.objects.get(id=production_id)
@@ -37,4 +39,8 @@ def production_update(request,production_id):
     return render(request,'productions/production_update.html', {
         'form':form
     })
+
+class ProductionViewSet(viewsets.ModelViewSet):
+    queryset = Production.objects.all()
+    serializer_class = ProductionSerializer
 
